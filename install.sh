@@ -59,10 +59,15 @@ sleep 1
 
 for ((i=0;i<${#gtag_ids[@]};++i)); do
   searchresult=$(grep -c ${gtag_ids[i]} $filename)
+  current_state="$(curl -X GET --header "Accept: application/json" "http://$openhab_url:$openhab_port/rest/items/${openhab_items[i]}" | jq -r '.state')"
   if [ $searchresult -gt 0 ]; then
-    curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "ON" "http://$openhab_url:$openhab_port/rest/items/${openhab_items[i]}"
+    if [ $current_state == "OFF" ]; then
+      curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "ON" "http://$openhab_url:$openhab_port/rest/items/${openhab_items[i]}"
+    fi
   else
-    curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://$openhab_url:$openhab_port/rest/items/${openhab_items[i]}"
+    if [ $current_state == "ON" ]; then
+      curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://$openhab_url:$openhab_port/rest/items/${openhab_items[i]}"
+    fi
   fi
 done
 
