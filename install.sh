@@ -27,7 +27,7 @@ read -p "OpenHAB IP-Adresse eingeben z.B. "'"GTag_1" "GTag_2"'":" oh_items
 #Update / Install
 apt-get -y update
 apt-get -y upgrade
-apt-get -y install bluez
+apt-get -y install bluez jq
 
 #Ordner erstellen
 sudo mkdir /usr/local/gtag_presence/
