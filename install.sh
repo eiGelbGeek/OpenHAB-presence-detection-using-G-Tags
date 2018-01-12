@@ -8,7 +8,7 @@ echo "###########################################"
 echo ":::"
 echo ":::"
 echo "::: Konfiguration -> Openhab presence detection using G-Tags!"
-echo ":::" 
+echo ":::"
 echo "::: Scheibweise wie ich den Beispielen einhalten!"
 echo "::: Reihenfolge von Gtag IDs und OpenHAB Items einhalten!"
 echo ":::"
@@ -48,7 +48,9 @@ openhab_url="$oh_ip"
 openhab_port="$oh_port"
 gtag_ids=($gtags)
 openhab_items=($oh_items)
+EOF
 
+cat <<'EOF' >> /usr/local/gtag_presence/scan_gtag.sh
 #From here changes can lead to loss of function!
 filename=/tmp/bluetooth_devices.$$
 hcitool lescan > $filename & sleep 10
@@ -69,6 +71,6 @@ EOF
 
 #Crontab erstellen
 crontab -l > gtag_cronjob
-echo "*/1 * * * * sh /usr/local/gtag_presence/scan_gtag.sh > /var/log/cron_gtag.log 2>&1" >> gtag_cronjob
+echo "*/1 * * * * bash /usr/local/gtag_presence/scan_gtag.sh > /dev/null 2>&1" >> gtag_cronjob
 crontab gtag_cronjob
 rm gtag_cronjob
