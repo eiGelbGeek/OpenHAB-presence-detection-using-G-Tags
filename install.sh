@@ -13,26 +13,26 @@ echo "#                 copyright by eiGelbGeek #"
 echo "###########################################"
 echo ":::"
 echo ":::"
-echo "::: Konfiguration -> Openhab presence detection using G-Tags!"
+echo "::: Configuration -> Openhab presence detection using G-Tags!"
 echo ":::"
-echo "::: Scheibweise wie in den angezeigten Beispielen einhalten!"
-echo "::: Reihenfolge von den Gtag IDs / OpenHAB Items einhalten!"
+echo "::: Keep the spelling as in the displayed examples!"
+echo "::: Keep order of the Gtag IDs / OpenHAB items!"
 echo ":::"
 echo ":::"
-read -p "OpenHAB IP-Adresse eingeben z.B. 192.168.2.100:" oh_ip
-read -p "OpenHAB RestAPI Port eingeben z.B. 8080:" oh_port
-read -p "G-Tag IDs eingeben z.B. "'"7C:3F:50:34:F2:6W" "7C:3F:50:99:XY:09"'":" gtags
-read -p "OpenHAB IP-Adresse eingeben z.B. "'"GTag_1" "GTag_2"'":" oh_items
+read -p "Enter OpenHAB IP Address e.g. 192.168.2.100:" oh_ip
+read -p "Enter OpenHAB RestAPI Port e.g. 8080:" oh_port
+read -p "Enter G tag IDs e.g. "'"7C:3F:50:34:F2:6W" "7C:3F:50:99:XY:09"'":" gtags
+read -p "Enter OpenHAB IP Address e.g. "'"GTag_1" "GTag_2"'":" oh_items
 
 #Update / Install
 apt-get -y update
 apt-get -y upgrade
 apt-get -y install bluez jq
 
-#Ordner erstellen
+#Create folder
 mkdir /usr/local/gtag_presence/
 
-#Script ertsellen
+#Create Script
 >/usr/local/gtag_presence/scan_gtag.sh
 cat <<EOF > /usr/local/gtag_presence/scan_gtag.sh
 #!/bin/bash
@@ -74,7 +74,7 @@ done
 rm $filename
 EOF
 
-#Crontab erstellen
+#Create Crontab
 crontab -l > gtag_cronjob
 echo "*/1 * * * * bash /usr/local/gtag_presence/scan_gtag.sh > /dev/null 2>&1" >> gtag_cronjob
 crontab gtag_cronjob
