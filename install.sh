@@ -16,7 +16,7 @@ echo ":::"
 echo "::: Konfiguration -> Openhab presence detection using G-Tags!"
 echo ":::"
 echo "::: Scheibweise wie in den angezeigten Beispielen einhalten!"
-echo "::: Reihenfolge von Gtag IDs und OpenHAB Items einhalten!"
+echo "::: Reihenfolge von den Gtag IDs / OpenHAB Items einhalten!"
 echo ":::"
 echo ":::"
 read -p "OpenHAB IP-Adresse eingeben z.B. 192.168.2.100:" oh_ip
