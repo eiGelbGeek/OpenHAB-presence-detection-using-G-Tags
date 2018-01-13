@@ -1,5 +1,11 @@
 #!/bin/bash
 
+###########################################
+# Openhab presence detection using G-Tags #
+#                             version 0.1 #
+#                 copyright by eiGelbGeek #
+###########################################
+
 echo "###########################################"
 echo "# Openhab presence detection using G-Tags #"
 echo "#                             version 0.1 #"
@@ -18,19 +24,13 @@ read -p "OpenHAB RestAPI Port eingeben z.B. 8080:" oh_port
 read -p "G-Tag IDs eingeben z.B. "'"7C:3F:50:34:F2:6W" "7C:3F:50:99:XY:09"'":" gtags
 read -p "OpenHAB IP-Adresse eingeben z.B. "'"GTag_1" "GTag_2"'":" oh_items
 
-###########################################
-# Openhab presence detection using G-Tags #
-#                             version 0.1 #
-#                 copyright by eiGelbGeek #
-###########################################
-
 #Update / Install
 apt-get -y update
 apt-get -y upgrade
 apt-get -y install bluez jq
 
 #Ordner erstellen
-sudo mkdir /usr/local/gtag_presence/
+mkdir /usr/local/gtag_presence/
 
 #Script ertsellen
 >/usr/local/gtag_presence/scan_gtag.sh
