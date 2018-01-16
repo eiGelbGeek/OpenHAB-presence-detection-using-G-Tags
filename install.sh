@@ -21,6 +21,7 @@ echo ":::"
 echo ":::"
 read -p "Enter OpenHAB IP Address e.g. 192.168.2.100:" oh_ip
 read -p "Enter OpenHAB RestAPI Port e.g. 8080:" oh_port
+read -p "Enter Openhab Item to prevent actions at startup e.g. Presence_Start_Up:" oh_start_up
 read -p "Enter G tag IDs e.g. "'"7C:3F:50:34:F2:6W" "7C:3F:50:99:XY:09"'":" gtags
 read -p "Enter OpenHAB IP Address e.g. "'"GTag_1" "GTag_2"'":" oh_items
 
@@ -48,30 +49,34 @@ openhab_url="$oh_ip"
 openhab_port="$oh_port"
 gtag_ids=($gtags)
 openhab_items=($oh_items)
+openhab_start_up_item=($oh_start_up)
 EOF
 
 cat <<'EOF' >> /usr/local/gtag_presence/scan_gtag.sh
 #From here changes can lead to loss of function!
-filename=/tmp/bluetooth_devices.$$
-hcitool lescan > $filename & sleep 10
-pkill --signal SIGINT hcitool
-sleep 1
+presence_start_up_state="$(curl -X GET --header "Accept: application/json" "http://$openhab_url:$openhab_port/rest/items/$oh_start_up" | jq -r '.state')"
 
-for ((i=0;i<${#gtag_ids[@]};++i)); do
-  searchresult=$(grep -c ${gtag_ids[i]} $filename)
-  current_state="$(curl -X GET --header "Accept: application/json" "http://$openhab_url:$openhab_port/rest/items/${openhab_items[i]}" | jq -r '.state')"
-  if [ $searchresult -gt 0 ]; then
-    if [ $current_state == "OFF" ]; then
-      curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "ON" "http://$openhab_url:$openhab_port/rest/items/${openhab_items[i]}"
-    fi
-  else
-    if [ $current_state == "ON" ]; then
-      curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://$openhab_url:$openhab_port/rest/items/${openhab_items[i]}"
-    fi
-  fi
-done
+if [ $presence_start_up_state == "OFF" ]; then
+  filename=/tmp/bluetooth_devices.$$
+  hcitool lescan > $filename & sleep 10
+  pkill --signal SIGINT hcitool
+  sleep 1
 
-rm $filename
+  for ((i=0;i<${#gtag_ids[@]};++i)); do
+    searchresult=$(grep -c ${gtag_ids[i]} $filename)
+    current_state="$(curl -X GET --header "Accept: application/json" "http://$openhab_url:$openhab_port/rest/items/${openhab_items[i]}" | jq -r '.state')"
+    if [ $searchresult -gt 0 ]; then
+      if [ $current_state == "OFF" ]; then
+        curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "ON" "http://$openhab_url:$openhab_port/rest/items/${openhab_items[i]}"
+      fi
+    else
+      if [ $current_state == "ON" ]; then
+        curl -X POST --header "Content-Type: text/plain" --header "Accept: application/json" -d "OFF" "http://$openhab_url:$openhab_port/rest/items/${openhab_items[i]}"
+      fi
+    fi
+  done
+  rm $filename
+fi
 EOF
 
 #Create Crontab
