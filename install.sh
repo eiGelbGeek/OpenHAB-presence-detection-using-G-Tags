@@ -16,14 +16,14 @@ echo ":::"
 echo "::: Configuration -> Openhab presence detection using G-Tags!"
 echo ":::"
 echo "::: Keep the spelling as in the displayed examples!"
-echo "::: Keep order of the Gtag IDs / OpenHAB items!"
+echo "::: Keep order of the G-Tag IDs / OpenHAB items!"
 echo ":::"
 echo ":::"
 read -p "Enter OpenHAB IP Address e.g. 192.168.2.100:" oh_ip
 read -p "Enter OpenHAB RestAPI Port e.g. 8080:" oh_port
 read -p "Enter Openhab Item to prevent actions at startup e.g. Presence_Start_Up:" oh_start_up
-read -p "Enter G tag IDs e.g. "'"7C:3F:50:34:F2:6W" "7C:3F:50:99:XY:09"'":" gtags
-read -p "Enter OpenHAB IP Address e.g. "'"GTag_1" "GTag_2"'":" oh_items
+read -p "Enter G-Tag IDs e.g. "'"7C:3F:50:34:F2:6W" "7C:3F:50:99:XY:09"'":" gtags
+read -p "Enter OpenHAB Items for G-Tags e.g. "'"GTag_1" "GTag_2"'":" oh_items
 
 #Update / Install
 apt-get -y update
